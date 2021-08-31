@@ -16,6 +16,10 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 dependencies {
@@ -29,8 +33,20 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2',
+            // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
+            //'org.bouncycastle:bcprov-jdk15on:1.60',
+            'io.jsonwebtoken:jjwt-jackson:0.11.2' // or 'io.jsonwebtoken:jjwt-gson:0.11.2' for gson
+    // https://mvnrepository.com/artifact/net.dv8tion/JDA
+    implementation 'net.dv8tion:JDA:4.3.0_310'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    // https://mvnrepository.com/artifact/com.thedeanda/lorem
+    testImplementation 'com.thedeanda:lorem:2.1'
 }
 
 test {
