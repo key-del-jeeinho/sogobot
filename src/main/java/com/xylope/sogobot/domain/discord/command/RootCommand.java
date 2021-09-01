@@ -1,0 +1,38 @@
+package com.xylope.sogobot.domain.discord.command;
+
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+
+import java.awt.*;
+
+public class RootCommand extends Command{
+    public RootCommand(String prefix) {
+        super(prefix);
+    }
+
+    @Override
+    public void execute(String[] args, User sender, TextChannel channel, int depth) {
+        super.execute(args, sender, channel, 0); //root command 의 depth 는 항상 0이다
+    }
+
+    @Override
+    public void run(String[] args, User sender, TextChannel channel, int depth) {
+        //if command's arguments aren't exists
+        if(args.length < depth + 2) //root 의 depth 가 0이고, args 의 length 의 기본값이 1이기때문에
+            sendBadRequestMessage(channel, "명령어의 인자를 입력해주세요");
+        else //if it is command arguments that do not satisfy the trigger
+            sendBadRequestMessage(channel, "잘못된 인자값입니다");
+    }
+
+    private void sendBadRequestMessage(TextChannel channel, String reason) {
+        MessageEmbed message = new EmbedBuilder()
+                .addField(":warning: 잘못된 명령어입니다!", reason, false)
+                .setColor(new Color(246, 56, 56))
+                .setFooter("made by 지인호")
+                .build();
+
+        channel.sendMessageEmbeds(message).complete();
+    }
+}
