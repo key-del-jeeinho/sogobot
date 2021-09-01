@@ -1,6 +1,8 @@
 package com.xylope.sogobot.domain.discord.command.function;
 
-import com.xylope.sogobot.domain.authorize.controller.AuthorizeController;
+import com.xylope.sogobot.domain.authorize.exception.AlreadyEnrolledException;
+import com.xylope.sogobot.domain.authorize.exception.DomainNotFoundException;
+import com.xylope.sogobot.domain.authorize.exception.EmailAlreadyEnrolledException;
 import com.xylope.sogobot.domain.discord.command.LeafCommand;
 import com.xylope.sogobot.global.dto.UnauthorizedUserInfoDto;
 import com.xylope.sogobot.domain.authorize.service.UserAuthorizeService;
@@ -12,10 +14,10 @@ import net.dv8tion.jda.api.entities.User;
 import java.awt.*;
 
 public class AuthorizeCommand extends LeafCommand {
-    private final AuthorizeController authorizeController;
-    public AuthorizeCommand(String prefix, AuthorizeController authorizeController) {
+    private final UserAuthorizeService authorizeService;
+    public AuthorizeCommand(String prefix, UserAuthorizeService authorizeService) {
         super(prefix);
-        this.authorizeController = authorizeController;
+        this.authorizeService = authorizeService;
     }
 
     @Override
@@ -24,12 +26,34 @@ public class AuthorizeCommand extends LeafCommand {
             sendBadRequestMessage(channel, "이메일을 입력해주세요!");
             return;
         }
-
-        //와 씨... 나천잰가
-        //TODO 2021.08.31 | 이후 로직을 AuthorizeController 에 위임한다 | 지인호
-        // 이러면 exception handler 또한 사용할 수있고 두개의 컨트롤러를 수평이아닌 수직적으로 연결할 수 있다!!
         UnauthorizedUserInfoDto dto = new UnauthorizedUserInfoDto(sender.getIdLong(), sender.getName(), args[depth+1]);
-        authorizeController.startAuthorize(dto);
+        try {
+            authorizeService.authorize(dto);
+        } catch (AlreadyEnrolledException e) {
+            channel.sendMessageEmbeds(new EmbedBuilder()
+                    .addField(":confounded:  이런 욕심쟁이!", "이미 인증해놓고선 뭘 또 인증하려그러세요", false)
+                    .setColor(new Color(252, 60, 60))
+                    .setFooter("made by 지인호")
+                    .build())
+                    .complete();
+            return;
+        } catch (EmailAlreadyEnrolledException e) {
+            channel.sendMessageEmbeds(new EmbedBuilder()
+                    .addField(":thinking:   혹시..아니죠?", "이미 그 이메일로 인증된 누군가가있는데...설마...아니죠?", false)
+                    .setColor(new Color(252, 60, 60))
+                    .setFooter("made by 지인호")
+                    .build())
+                    .complete();
+            return;
+        } catch (DomainNotFoundException e) {
+            channel.sendMessageEmbeds(new EmbedBuilder()
+                    .addField(":sob:    이런! 학교이메일이아니에요!", "학교에서 발급한 이메일로 다시시도해주세요!", false)
+                    .setColor(new Color(252, 60, 60))
+                    .setFooter("made by 지인호")
+                    .build())
+                    .complete();
+            return;
+        }
         sendVerifyEmailMessage(channel, dto);
     }
 

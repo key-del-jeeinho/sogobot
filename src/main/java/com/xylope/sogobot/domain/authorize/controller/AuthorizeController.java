@@ -1,7 +1,10 @@
 package com.xylope.sogobot.domain.authorize.controller;
 
+import com.xylope.sogobot.domain.authorize.exception.AlreadyEnrolledException;
 import com.xylope.sogobot.domain.authorize.service.UserAuthorizeService;
 import com.xylope.sogobot.domain.authorize.util.AuthorizeTokenUtil;
+import com.xylope.sogobot.domain.discord.SogoBot;
+import com.xylope.sogobot.domain.discord.manager.DiscordRoleManager;
 import com.xylope.sogobot.domain.enroll.service.EnrollService;
 import com.xylope.sogobot.global.dto.AuthorizedUserDto;
 import com.xylope.sogobot.global.dto.UnauthorizedUserInfoDto;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.*;
+import java.util.Objects;
 
 @Controller @RequiredArgsConstructor
 public class AuthorizeController {
@@ -28,9 +32,5 @@ public class AuthorizeController {
 
         enrollService.enrollUser(user);
         return "authorize";
-    }
-
-    public void startAuthorize(UnauthorizedUserInfoDto dto) {
-        userAuthorizeService.authorize(dto);
     }
 }
