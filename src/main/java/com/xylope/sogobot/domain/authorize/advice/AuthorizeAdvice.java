@@ -42,36 +42,6 @@ public class AuthorizeAdvice {
         return "error/wrong-token";
     }
 
-    @ExceptionHandler(AlreadyEnrolledException.class)
-    public void handleAlreadyEnrolledException(AlreadyEnrolledException e) {
-        sogoBot.doWithJda(jda -> {
-            Objects.requireNonNull(jda.getUserById(e.getInfo().getId()))
-                        .openPrivateChannel()
-                        .complete()
-                    .sendMessageEmbeds(new EmbedBuilder()
-                            .addField(":confounded:  이런 욕심쟁이!", "이미 인증해놓고선 뭘 또 인증하려그러세요", false)
-                            .setColor(new Color(252, 60, 60))
-                            .setFooter("made by 지인호")
-                    .build())
-                    .complete();
-        });
-    }
-
-    @ExceptionHandler(EmailAlreadyEnrolledException.class)
-    public void handleEmailAlreadyEnrolledException(EmailAlreadyEnrolledException e) {
-        sogoBot.doWithJda(jda -> {
-            Objects.requireNonNull(jda.getUserById(e.getInfo().getId()))
-                    .openPrivateChannel()
-                    .complete()
-                    .sendMessageEmbeds(new EmbedBuilder()
-                            .addField(":thinking:   혹시..아니죠?", "이미 그 이메일로 인증된 누군가가있는데...설마...아니죠?", false)
-                            .setColor(new Color(252, 60, 60))
-                            .setFooter("made by 지인호")
-                            .build())
-                    .complete();
-        });
-    }
-
     @ExceptionHandler(DomainNotFoundException.class)
     public void handleDomainNotFoundException(DomainNotFoundException e) {
         sogoBot.doWithJda(jda -> {
