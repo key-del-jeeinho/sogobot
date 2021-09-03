@@ -14,7 +14,7 @@ public class DiscordRoleManager {
     @Value("${bot.server-id}")
     private static String serverId = "881868890366431283";
     public static void addDepartmentRole(DepartmentType departmentType, Long id) {
-        sogoBot.doWithJda(jda -> log.info(String.valueOf(departmentType.getRoleId())));
-        sogoBot.doWithJda(jda -> jda.getGuildById(serverId).addRoleToMember(id, jda.getRoleById(departmentType.getRoleId())).complete());
+        sogoBot.doWithJda(jda -> jda.getGuildById(serverId)
+                .addRoleToMember(id, jda.getRoleById(departmentType.getRoleId())).complete());
     }
 }
