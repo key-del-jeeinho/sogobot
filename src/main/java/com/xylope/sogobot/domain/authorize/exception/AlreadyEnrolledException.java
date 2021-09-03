@@ -1,10 +1,13 @@
 package com.xylope.sogobot.domain.authorize.exception;
 
 import com.xylope.sogobot.global.dto.UnauthorizedUserInfoDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class AlreadyEnrolledException extends RuntimeException {
-    private final UnauthorizedUserInfoDto info;
+    private UnauthorizedUserInfoDto info;
 }

@@ -1,15 +1,12 @@
 package com.xylope.sogobot.domain.authorize.advice;
 
-import com.xylope.sogobot.domain.authorize.exception.DomainNotFoundException;
-import com.xylope.sogobot.domain.discord.SogoBot;
-import com.xylope.sogobot.domain.discord.property.MessageProperties;
+import com.xylope.sogobot.domain.authorize.exception.AlreadyEnrolledException;
 import com.xylope.sogobot.infra.exception.EmailSendingFailureException;
 import com.xylope.sogobot.infra.service.MailSenderService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,17 +14,14 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
-import java.awt.*;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
-import java.util.Objects;
 
-@ControllerAdvice @Slf4j
+@ControllerAdvice ("com.xylope.sogobot.domain.authorize")@Slf4j
 @RequiredArgsConstructor
 public class AuthorizeAdvice {
-    private final SogoBot sogoBot;
     private final MailSenderService mailSenderService;
     private final SpringTemplateEngine templateEngine;
-    private final MessageProperties messageProperties;
 
     @Value("${bot.admin-email")
     private String adminEmail;
@@ -42,8 +36,13 @@ public class AuthorizeAdvice {
         return "error/wrong-token";
     }
 
+    @ExceptionHandler(AlreadyEnrolledException.class)
+    public String alreadyEnrolledException() {
+        return "/error/already-enrolled";
+    }
+
     @ExceptionHandler(Exception.class)
-    public void unexpectedExceptionOccurred(Exception e) {
+    public void handleUnexpectedException(Exception e) {
         log.warn("예상치못한 예외가 발생하였습니다!\n" + e.getLocalizedMessage());
 
         Context context = new Context();
