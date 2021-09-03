@@ -1,9 +1,8 @@
 package com.xylope.sogobot.domain.authorize.advice;
 
-import com.xylope.sogobot.domain.authorize.exception.AlreadyEnrolledException;
 import com.xylope.sogobot.domain.authorize.exception.DomainNotFoundException;
-import com.xylope.sogobot.domain.authorize.exception.EmailAlreadyEnrolledException;
 import com.xylope.sogobot.domain.discord.SogoBot;
+import com.xylope.sogobot.domain.discord.property.MessageProperties;
 import com.xylope.sogobot.infra.exception.EmailSendingFailureException;
 import com.xylope.sogobot.infra.service.MailSenderService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,6 +27,7 @@ public class AuthorizeAdvice {
     private final SogoBot sogoBot;
     private final MailSenderService mailSenderService;
     private final SpringTemplateEngine templateEngine;
+    private final MessageProperties messageProperties;
 
     @Value("${bot.admin-email")
     private String adminEmail;
@@ -40,21 +40,6 @@ public class AuthorizeAdvice {
     @ExceptionHandler(JwtException.class)
     public String handleJwtException() {
         return "error/wrong-token";
-    }
-
-    @ExceptionHandler(DomainNotFoundException.class)
-    public void handleDomainNotFoundException(DomainNotFoundException e) {
-        sogoBot.doWithJda(jda -> {
-            Objects.requireNonNull(jda.getUserById(e.getInfo().getId()))
-                    .openPrivateChannel()
-                    .complete()
-                    .sendMessageEmbeds(new EmbedBuilder()
-                            .addField(":thinking:   이런 SW마이스터고도 있었나요??", "이메일의 도메인이 SW마이스터고 도메인이 아니에요", false)
-                            .setColor(new Color(252, 60, 60))
-                            .setFooter("made by 지인호")
-                            .build())
-                    .complete();
-        });
     }
 
     @ExceptionHandler(Exception.class)
