@@ -1,5 +1,6 @@
 package com.xylope.sogobot.domain.discord.command;
 
+import com.xylope.sogobot.domain.discord.property.MessageProperties;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -8,8 +9,11 @@ import net.dv8tion.jda.api.entities.User;
 import java.awt.*;
 
 public class RootCommand extends Command{
-    public RootCommand(String prefix) {
+    private MessageProperties messageProperties;
+
+    public RootCommand(String prefix, MessageProperties messageProperties) {
         super(prefix);
+        this.messageProperties = messageProperties;
     }
 
     @Override
@@ -29,8 +33,8 @@ public class RootCommand extends Command{
     private void sendBadRequestMessage(TextChannel channel, String reason) {
         MessageEmbed message = new EmbedBuilder()
                 .addField(":warning: 잘못된 명령어입니다!", reason, false)
-                .setColor(new Color(246, 56, 56))
-                .setFooter("made by 지인호")
+                .setColor(new Color(messageProperties.getError().getColor()))
+                .setFooter(messageProperties.getError().getFooter())
                 .build();
 
         channel.sendMessageEmbeds(message).complete();

@@ -34,13 +34,7 @@ public class UserAuthorizeServiceImpl implements UserAuthorizeService {
             throw new EmailAlreadyEnrolledException(info);
 
         DepartmentType department;
-        try {
-            department = validateDomain(email);
-        } catch (DomainNotFoundException e) {
-            DomainNotFoundException thr =  new DomainNotFoundException(e.getDomain());
-            thr.setInfo(info);
-            throw thr;
-        }
+        department = validateDomain(email);
         sendAuthorizeEmail(info, department);
     }
 
