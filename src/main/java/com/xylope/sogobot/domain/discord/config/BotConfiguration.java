@@ -4,15 +4,13 @@ import com.xylope.sogobot.domain.discord.SogoBot;
 import com.xylope.sogobot.domain.discord.command.LeafCommand;
 import com.xylope.sogobot.domain.discord.command.RootCommand;
 import com.xylope.sogobot.domain.discord.command.function.AuthorizeCommand;
-import com.xylope.sogobot.domain.discord.command.function.TestCommand;
 import com.xylope.sogobot.domain.discord.listeners.CommandListener;
 import com.xylope.sogobot.domain.authorize.service.UserAuthorizeService;
+import com.xylope.sogobot.domain.discord.manager.DiscordMessageManager;
 import com.xylope.sogobot.domain.discord.manager.DiscordRoleManager;
 import com.xylope.sogobot.domain.discord.property.BotProperties;
 import com.xylope.sogobot.domain.discord.property.MessageProperties;
-import com.xylope.sogobot.global.enum_type.DepartmentType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,7 +32,9 @@ public class BotConfiguration {
                 role.getDepartment().setRoleId(role.getRoleId());
             }
         }
+        //ManagerInitializer
         DiscordRoleManager.setSogoBot(sogoBot);
+        DiscordMessageManager.setSogoBot(sogoBot);
         return sogoBot;
     }
 
@@ -42,9 +42,7 @@ public class BotConfiguration {
     public RootCommand rootCommand() {
         RootCommand rootCommand = new RootCommand(botProperties.getCommandPrefix(), messageProperties);
 
-        LeafCommand testCommand = new TestCommand("테스트");
         LeafCommand authorizeCommand = new AuthorizeCommand("인증", messageProperties, authorizeService);
-        rootCommand.addChild(testCommand);
         rootCommand.addChild(authorizeCommand);
 
         return rootCommand;

@@ -3,6 +3,7 @@ package com.xylope.sogobot.domain.discord.listeners;
 import com.xylope.sogobot.domain.discord.SogoBot;
 import com.xylope.sogobot.domain.discord.command.RootCommand;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -20,9 +21,11 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if(event.getAuthor().isBot()) return;
+
         String[] args = event.getMessage().getContentRaw().split(" ");
         User user = event.getAuthor();
-        TextChannel channel = event.getTextChannel();
+        MessageChannel channel = event.getChannel();
 
         root.execute(args, user, channel, 0);
     }
