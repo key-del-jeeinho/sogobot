@@ -2,6 +2,7 @@ package com.xylope.sogobot.domain.discord.command;
 
 import com.xylope.sogobot.domain.discord.trigger.CommandTrigger;
 import com.xylope.sogobot.domain.discord.exception.ChildCommandAlreadyExistsException;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
@@ -27,7 +28,7 @@ public abstract class Command {
         children.add(child);
     }
 
-    public void execute(String[] args, User sender, TextChannel channel, int depth) {
+    public void execute(String[] args, User sender, MessageChannel channel, int depth) {
         if(trigger.check(args[depth])) { //double check (super command 의 command.trigger.check())
             if(args.length > depth+1) {
                 for (Command command : children) {
@@ -41,5 +42,5 @@ public abstract class Command {
         }
     }
 
-    public abstract void run(String[] args, User sender, TextChannel channel, int depth);
+    public abstract void run(String[] args, User sender, MessageChannel channel, int depth);
 }

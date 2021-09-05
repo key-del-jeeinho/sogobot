@@ -8,4 +8,5 @@ import javax.validation.constraints.Email;
 public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByEmail(@Email String email);
     boolean existsById(Long id);
+    User getById(Long id);
 }

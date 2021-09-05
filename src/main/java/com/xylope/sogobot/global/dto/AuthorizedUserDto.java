@@ -19,14 +19,4 @@ public class AuthorizedUserDto {
         this.email = dto.getEmail();
         this.departmentType = dto.getDepartmentType();
     }
-
-    public User toEntity() {
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setEmail(email);
-        user.setDepartmentType(departmentType.name());
-
-        return user;
-    }
 }

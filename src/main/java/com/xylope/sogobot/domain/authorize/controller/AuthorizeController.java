@@ -3,6 +3,7 @@ package com.xylope.sogobot.domain.authorize.controller;
 import com.xylope.sogobot.domain.authorize.exception.AlreadyEnrolledException;
 import com.xylope.sogobot.domain.authorize.service.UserAuthorizeService;
 import com.xylope.sogobot.domain.authorize.util.AuthorizeTokenUtil;
+import com.xylope.sogobot.domain.enroll.dto.UserDto;
 import com.xylope.sogobot.domain.enroll.service.EnrollService;
 import com.xylope.sogobot.global.dto.AuthorizedUserDto;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AuthorizeController {
     @RequestMapping("/authorize")
     public String authorize(@RequestParam String token) {
         AuthorizedUserDto user = authorizeTokenUtil.getUserByToken(token);
-        enrollService.enrollUser(user);
+        enrollService.enrollUser(UserDto.byAuthorizeUserDto(user));
         return "authorize";
     }
 }

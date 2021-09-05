@@ -19,6 +19,10 @@ public class AuthorizeTokenUtil {
     @Value("${jwt.secret}")
     private String secret;
 
+    public AuthorizeTokenUtil() {
+        secret += System.currentTimeMillis();
+    }
+
     public String makeJwtToken(DomainAuthorizedUserInfoDto dto) {
         Date now = new Date();
 
@@ -64,6 +68,6 @@ public class AuthorizeTokenUtil {
     }
 
     private Key getSignKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor((secret).getBytes(StandardCharsets.UTF_8));
     }
 }
