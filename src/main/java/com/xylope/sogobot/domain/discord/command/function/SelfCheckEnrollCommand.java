@@ -4,6 +4,7 @@ import com.xylope.sogobot.domain.discord.command.LeafCommand;
 import com.xylope.sogobot.domain.discord.property.MessageProperties;
 import com.xylope.sogobot.domain.enroll.repository.UserRepository;
 import com.xylope.sogobot.domain.selfcheck.dto.StudentInfoDto;
+import com.xylope.sogobot.domain.selfcheck.exception.WrongStudentInfoException;
 import com.xylope.sogobot.domain.selfcheck.service.SelfCheckService;
 import com.xylope.sogobot.global.enum_type.DepartmentType;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -29,7 +30,7 @@ public class SelfCheckEnrollCommand extends LeafCommand {
     @Override
     public void run(String[] args, User sender, MessageChannel channel, int depth) {
         if(!(channel instanceof PrivateChannel)) return;
-        if(!(args.length < depth+4)) {//num of input args = 3
+        if(!(args.length > depth+3)) {//num of input args = 3
             sendBadRequestMessage(channel, "명령어의 인자값을 입력해주세요! (소고야 진단등록 <이름> <생일> <비밀번호>");
             return;
         }
@@ -39,7 +40,21 @@ public class SelfCheckEnrollCommand extends LeafCommand {
         }
         String department = userRepository.getById(sender.getIdLong()).getDepartmentType();
         StudentInfoDto info = new StudentInfoDto(args[depth + 1], DepartmentType.of(department), args[depth + 2], args[depth + 3]);
-        selfCheckService.enroll(info);
+        try {
+            selfCheckService.enroll(info);
+        } catch (WrongStudentInfoException e) {
+            sendStudentNotFoundMessage(channel);
+        }
+    }
+
+    private void sendStudentNotFoundMessage(MessageChannel channel) {
+        MessageEmbed message = new EmbedBuilder()
+                .addField(":warning: 해당 정보에 맞는 학생을 찾을 수 없습니다!", "학생정보를 확인하고 다시시도해주세요", false)
+                .setColor(messageProperties.getError().getColor())
+                .setFooter(messageProperties.getError().getFooter())
+                .build();
+
+        channel.sendMessageEmbeds(message).complete();
     }
 
     private void sendBadRequestMessage(MessageChannel channel, String reason) {

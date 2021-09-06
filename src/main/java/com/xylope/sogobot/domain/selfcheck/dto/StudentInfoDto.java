@@ -1,11 +1,13 @@
 package com.xylope.sogobot.domain.selfcheck.dto;
 
 import com.xylope.sogobot.global.enum_type.DepartmentType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+@EqualsAndHashCode
 public class StudentInfoDto {
     private final String name;
     private final DepartmentType department;

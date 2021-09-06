@@ -1,0 +1,53 @@
+{
+  "properties": [
+    {
+      "name": "bot.token",
+      "type": "java.lang.String",
+      "description": "token of discord bot (DO NOT SHOW ANYONE)."
+    },
+    {
+      "name": "bot.command-prefix",
+      "type": "java.lang.String",
+      "description": "root command's prefix."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "secret key of jwt."
+    },
+    {
+      "name": "bot.admin-email",
+      "type": "java.lang.String",
+      "description": "email of sogo bot's admin."
+    },
+    {
+      "name": "bot.server-id",
+      "type": "java.lang.Long",
+      "description": "server id to user this bot."
+    },
+    {
+      "name": "bot.roles",
+      "type": "java.lang.String",
+      "description": "Description for bot.roles."
+    },
+    {
+      "name": "message.error.footer",
+      "type": "java.lang.String",
+      "description": "Description for message.error.footer."
+    },
+    {
+      "name": "message.error.color",
+      "type": "java.lang.Integer",
+      "description": "Description for message.error.color."
+    },
+    {
+      "name": "message.info.footer",
+      "type": "java.lang.String",
+      "description": "Description for message.info.footer."
+    },
+    {
+      "name": "message.info.color",
+      "type": "java.lang.Integer",
+      "description": "Description for message.info.color."
+    }
+  ] }
